@@ -1,6 +1,24 @@
 [
   {
+    "title": "Molecule Ray Tracer",
+    "slug": "molecule-ray-tracer",
+    "tagline": "GPU ray tracing for molecular structures",
+    "inProgress": true,
+    "summary": "An OpenGL 4.6 renderer that parses PDB protein/DNA files into atoms, computes a bounding volume, and uploads them to the GPU as a shader storage buffer. A GLSL compute shader casts a ray per pixel, intersects each atom as a sphere, and writes the image to a texture drawn on a full-screen quad.",
+    "tags": [
+      "C++",
+      "OpenGL",
+      "GLSL",
+      "Compute Shaders"
+    ],
+    "status": "source",
+    "links": {
+      "source": "https://github.com/newwavejacob-web/MOLE-Renderer"
+    }
+  },
+  {
     "title": "HealthDB",
+    "slug": "healthdb",
     "tagline": "Distributed key-value store",
     "summary": "A distributed key-value store in Rust built on the Raft consensus protocol, implemented from the paper: leader election, log replication, and heartbeats. Writes go through a write-ahead log with CRC32 integrity checks for crash-safe recovery, and nodes exchange AppendEntries/RequestVote RPCs over an async Tokio TCP layer with timeouts and retries.",
     "tags": [
@@ -16,6 +34,7 @@
   },
   {
     "title": "What 2 Watch",
+    "slug": "what-2-watch",
     "tagline": "Semantic movie & TV recommender",
     "summary": "A \"vibe-first\" recommender that matches films, series, and anime by mood and tone using OpenAI embeddings and vector similarity instead of keyword overlap. A TMDB ingestion tool and Reddit scraper grow the SQLite catalog, and the Go/Gin + React app runs in Docker Compose behind Caddy with Cloudflare in front.",
     "tags": [
@@ -33,8 +52,9 @@
   },
   {
     "title": "BLE Mesh Sensor Network",
+    "slug": "ble-mesh",
     "tagline": "Senior design: silicon to phone",
-    "role": "Senior design · team project",
+    "role": "Senior design · solo",
     "hidden": true,
     "summary": "A Bluetooth Mesh network of EFR32MG24 sensor nodes using a custom vendor model and opcodes for telemetry. A SiW917 gateway bridges the mesh to MQTT and Firebase Realtime Database with per-node state tracking, and a bidirectional command path lets a React Native app toggle LEDs and change sensor intervals remotely.",
     "tags": [
@@ -52,6 +72,7 @@
   },
   {
     "title": "Sealbound",
+    "slug": "sealbound",
     "tagline": "2D narrative RPG",
     "role": "Contributor · team project",
     "summary": "A 2D narrative RPG in Godot where you restore the world through connection, not sacrifice, built with a small team. My contributions include collisions and Y-sorting, the save/load system, time-of-day lighting, bridges and teleports, and the dungeon reward screen. I also built the game's official landing page.",
@@ -74,6 +95,7 @@
   },
   {
     "title": "LockIN",
+    "slug": "lockin",
     "tagline": "Study-to-unlock iOS app",
     "summary": "A native iOS app that shields distracting apps behind Screen Time; you earn unlock minutes by answering standardized-test questions and spend them on per-app usage time. The core is a framework-free Swift package (append-only ledger, difficulty-scaled earn engine, unlock controller) covered by 30 XCTest cases, wired to a Device Activity Monitor extension that auto-relocks and refunds on OS failure.",
     "tags": [
@@ -90,6 +112,7 @@
   },
   {
     "title": "PL/0 Compiler",
+    "slug": "pl0-compiler",
     "tagline": "Compiler + virtual machine",
     "summary": "A complete compiler for the PL/0 language written in C, with a lexical analyzer, parser, and code generator that emits code for the PM/0 stack machine. It handles procedures, recursion, control structures, and nested scoping, and ships with a PM/0 virtual machine to run the output.",
     "tags": [
@@ -104,6 +127,7 @@
   },
   {
     "title": "Solaris Shell",
+    "slug": "solaris-shell",
     "tagline": "Unix shell in C",
     "summary": "A Fallout-themed Unix shell written in C directly on POSIX process APIs. It tokenizes quoted arguments, runs programs with fork/execvp, and supports pipes, I/O redirection (>, >>, <), and built-ins dispatched through a function-pointer table.",
     "tags": [
@@ -118,23 +142,8 @@
     }
   },
   {
-    "title": "Molecule Ray Tracer",
-    "tagline": "GPU ray tracing for molecular structures",
-    "inProgress": true,
-    "summary": "An OpenGL 4.6 renderer that parses PDB protein/DNA files into atoms, computes a bounding volume, and uploads them to the GPU as a shader storage buffer. A GLSL compute shader casts a ray per pixel, intersects each atom as a sphere, and writes the image to a texture drawn on a full-screen quad.",
-    "tags": [
-      "C++",
-      "OpenGL",
-      "GLSL",
-      "Compute Shaders"
-    ],
-    "status": "source",
-    "links": {
-      "source": "https://github.com/newwavejacob-web/Learning_OpenGL"
-    }
-  },
-  {
     "title": "Shadow of the Sword",
+    "slug": "shadow-of-the-sword",
     "tagline": "Souls-like parry combat game",
     "role": "Team of 4 · CAP 4053",
     "hidden": true,

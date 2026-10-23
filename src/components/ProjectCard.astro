@@ -3,9 +3,11 @@ import { STATUS_LABEL, type Project } from "../lib/projects";
 
 interface Props {
   project: Project;
+  // Set when the project has a published page at /projects/<slug>.
+  pageUrl?: string;
 }
 
-const { project: p } = Astro.props;
+const { project: p, pageUrl } = Astro.props;
 
 const links = [
   p.links.live && { label: "Live demo", url: p.links.live },
@@ -21,7 +23,7 @@ const links = [
       <span class={`status status-${p.status}`}>{STATUS_LABEL[p.status]}</span>
       {p.inProgress && <span class="badge">In progress</span>}
     </div>
-    <h3>{p.title}</h3>
+    <h3>{pageUrl ? <a class="card-title" href={pageUrl}>{p.title}</a> : p.title}</h3>
     <p class="tagline">
       {p.tagline}
       {p.role && <span class="role"> · {p.role}</span>}
@@ -35,6 +37,11 @@ const links = [
   </ul>
 
   <nav class="links" aria-label={`${p.title} links`}>
+    {pageUrl && (
+      <a href={pageUrl}>
+        Project page <span aria-hidden="true">→</span>
+      </a>
+    )}
     {links.map((l) => (
       <a href={l.url} target="_blank" rel="noopener noreferrer">
         {l.label} <span aria-hidden="true">↗</span>

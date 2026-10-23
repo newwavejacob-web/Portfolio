@@ -1,0 +1,48 @@
+---
+import "../styles/global.css";
+import { name, resume } from "../lib/site";
+
+interface Props {
+  title: string;
+  description: string;
+  type?: "website" | "article";
+  skipTo?: { href: string; label: string };
+}
+
+const { title, description, type = "website", skipTo = { href: "#main", label: "Skip to content" } } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip" href={skipTo.href}>{skipTo.label}</a>
+
+    <header class="site-header wrap">
+      <a class="logo" href="/">JR</a>
+      <nav aria-label="Primary">
+        <a href="/#projects">Projects</a>
+        <a href={resume}>Resume</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="wrap site-footer">
+      <p>© {new Date().getFullYear()} {name}</p>
+    </footer>
+  </body>
+</html>

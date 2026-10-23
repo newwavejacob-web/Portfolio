@@ -1,0 +1,151 @@
+---
+// One page per entry in src/content/projects/. The Markdown body supplies the
+// Overview → Results sections (order enforced by scripts/check-projects.mjs);
+// the gallery, video, "What's next" and links come from frontmatter.
+import { Image } from "astro:assets";
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { publishedPages, formatDates, PAGE_STATUS_LABEL, type ProjectPage } from "../../lib/projectPages";
+import { name } from "../../lib/site";
+
+export async function getStaticPaths() {
+  return (await publishedPages()).map((page) => ({ params: { slug: page.data.slug }, props: { page } }));
+}
+
+const { page } = Astro.props as { page: ProjectPage };
+const p = page.data;
+const { Content } = await render(page);
+
+const links = [
+  p.links.live && { label: "Live demo", url: p.links.live },
+  p.links.video && { label: "Demo video", url: p.links.video },
+  p.links.source && { label: "Source code", url: p.links.source },
+  ...(p.links.extra ?? []),
+].filter(Boolean) as { label: string; url: string }[];
+
+// Gallery images are capped at the content column width (720px), 2x for retina.
+const widths = [360, 720, 1440];
+const sizes = "(min-width: 760px) 720px, calc(100vw - 32px)";
+---
+
+<Base title={`${p.title} · ${name}`} description={`${p.title}: ${p.tagline}`} type="article">
+  <article class="project wrap">
+    {p.draft && (
+      <p class="draft-banner" role="note">Draft: visible in <code>npm run dev</code> only, left out of production builds.</p>
+    )}
+
+    <header class="project-header">
+      <a class="back" href="/#projects"><span aria-hidden="true">←</span> All projects</a>
+      <div class="badges">
+        <span class="badge">{PAGE_STATUS_LABEL[p.status]}</span>
+      </div>
+      <h1>{p.title}</h1>
+      <p class="lede muted">{p.tagline}</p>
+      <dl class="facts">
+        <div>
+          <dt>Role</dt>
+          <dd>{p.role}</dd>
+        </div>
+        <div>
+          <dt>Dates</dt>
+          <dd>{formatDates(p.dates)}</dd>
+        </div>
+        {p.team && (
+          <div>
+            <dt>Team</dt>
+            <dd>
+              <ul class="team">
+                {p.team.map((m) => (
+                  <li>
+                    {m.url ? <a href={m.url} target="_blank" rel="noopener noreferrer">{m.name}</a> : m.name}
+                    {m.role && <span class="muted"> · {m.role}</span>}
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        )}
+      </dl>
+      <ul class="tags" aria-label="Technologies">
+        {p.tags.map((t) => <li>{t}</li>)}
+      </ul>
+    </header>
+
+    <Image
+      class="cover"
+      src={p.cover.src}
+      alt={p.cover.alt}
+      widths={[480, 1080, 2160]}
+      sizes="(min-width: 1112px) 1048px, calc(100vw - 32px)"
+      loading="eager"
+      fetchpriority="high"
+    />
+
+    <div class="prose">
+      <Content />
+
+      {p.gallery.length > 0 && (
+        <div class="gallery">
+          {p.gallery.map((g) => (
+            <figure>
+              <Image src={g.src} alt={g.alt} widths={widths} sizes={sizes} />
+              {g.caption && <figcaption>{g.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )}
+
+      {p.video && (
+        <figure class="video">
+          <iframe
+            src={p.video.embed}
+            title={p.video.title}
+            loading="lazy"
+            allow="encrypted-media; picture-in-picture; fullscreen"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+          <figcaption>{p.video.title}</figcaption>
+        </figure>
+      )}
+
+      <h2 id="whats-next">What's next</h2>
+      <ul>
+        {p.next.map((item) => <li>{item}</li>)}
+      </ul>
+
+      <h2 id="links">Links</h2>
+      {links.length > 0 ? (
+        <ul class="page-links">
+          {links.map((l) => (
+            <li>
+              <a href={l.url} target="_blank" rel="noopener noreferrer">
+                {l.label} <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="muted">No public links yet.</p>
+      )}
+    </div>
+  </article>
+
+  <script>
+    // Mermaid is large, so it is only downloaded on pages that have a diagram.
+    // Without JavaScript the diagram source stays visible as a code block.
+    const blocks = document.querySelectorAll<HTMLElement>("pre > code.language-mermaid");
+    if (blocks.length) {
+      const { default: mermaid } = await import("mermaid");
+      const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: dark ? "dark" : "neutral", securityLevel: "strict" });
+      const nodes = [...blocks].map((code) => {
+        const div = document.createElement("div");
+        div.className = "mermaid";
+        div.textContent = code.textContent ?? "";
+        code.parentElement!.replaceWith(div);
+        return div;
+      });
+      await mermaid.run({ nodes });
+    }
+  </script>
+</Base>

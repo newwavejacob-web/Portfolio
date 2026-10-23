@@ -6,6 +6,8 @@ export type Status = "live" | "video" | "source";
 
 export interface Project {
   title: string;
+  // Matches src/content/projects/<slug>.md when the project has its own page.
+  slug: string;
   tagline: string;
   summary: string;
   tags: string[];
@@ -42,6 +44,7 @@ function validate(p: Project, i: number): Project {
   for (const key of ["title", "tagline", "summary"] as const) {
     if (!p[key]?.trim()) fail(`missing "${key}"`);
   }
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(p.slug ?? "")) fail(`"slug" must be kebab-case`);
   if (!Array.isArray(p.tags) || p.tags.length === 0) fail(`needs at least one tag`);
   if (!(p.status in STATUS_LABEL)) fail(`status must be one of ${Object.keys(STATUS_LABEL).join(", ")}`);
   if (!p.links?.source) fail(`every card needs links.source`);
@@ -52,5 +55,9 @@ function validate(p: Project, i: number): Project {
   return p;
 }
 
+const all = (raw as Project[]).map(validate);
+const dupe = all.find((p, i) => all.findIndex((q) => q.slug === p.slug) !== i);
+if (dupe) throw new Error(`projects.json: duplicate slug "${dupe.slug}"`);
+
 // Hidden cards are still validated, so they're ready the moment you flip them on.
-export const projects: Project[] = (raw as Project[]).map(validate).filter((p) => !p.hidden);
+export const projects: Project[] = all.filter((p) => !p.hidden);

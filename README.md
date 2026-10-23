@@ -1,6 +1,6 @@
 # Portfolio
 
-Personal portfolio site for Jacob Roberts. Static [Astro](https://astro.build) site, deployed to Cloudflare Pages on every push to `main`. No server and no client-side JavaScript.
+Personal portfolio site for Jacob Roberts. Static [Astro](https://astro.build) site, deployed to Cloudflare Pages on every push to `main`. No server. The only client-side JavaScript is Mermaid, which loads only on project pages that contain a diagram.
 
 **Roadmap:** see [`TODO.md`](TODO.md) for the card-by-card checklist.
 
@@ -10,7 +10,7 @@ Personal portfolio site for Jacob Roberts. Static [Astro](https://astro.build) s
 npm install
 npm run dev          # http://localhost:4321
 npm run build        # static output in dist/
-npm run verify       # build + check every internal and external link
+npm run verify       # check project pages, build, then check every internal and external link
 ```
 
 ## Editing projects
@@ -20,6 +20,7 @@ All project cards come from **`src/data/projects.json`**. To add or upgrade a pr
 ```jsonc
 {
   "title": "What 2 Watch",
+  "slug": "what-2-watch",                  // unique, kebab-case; links the card to its project page
   "tagline": "Semantic movie & TV recommender",
   "role": "Contributor · team project",   // optional
   "inProgress": true,                      // optional, shows an "In progress" badge
@@ -37,6 +38,35 @@ All project cards come from **`src/data/projects.json`**. To add or upgrade a pr
 ```
 
 The status label has to be backed by a link. The build fails if a card says **Live demo** without `links.live`, says **Demo video** without `links.video`, or has no `links.source`. Run `npm run verify` before pushing to catch dead links too.
+
+## Project pages
+
+A card gets its own page at `/projects/<slug>/` when `src/content/projects/<slug>.md` exists and isn't a draft. The card's title and a **Project page →** link then point to it. Cards without a page keep linking only to their source.
+
+Copy `src/content/projects/healthdb.md` as a starting point. Put images in `src/assets/projects/<slug>/`, where Astro optimizes them.
+
+```yaml
+title: HealthDB
+slug: healthdb                 # must match the filename and a card's "slug" in projects.json
+tagline: One line
+tags: [Rust, Tokio]
+role: What you did             # required; on team projects say which parts were yours
+team:                          # optional
+  - { name: Alex, role: Firmware, url: https://github.com/alex }
+dates: { start: 2025-09, end: 2026-05 }   # leave out end for "present"
+status: in-progress            # in-progress | complete | archived
+links: { source: https://..., live: https://..., video: https://..., extra: [{ label: Docs, url: https://... }] }
+cover: { src: ../../assets/projects/healthdb/cover.png, alt: ... }
+gallery:                       # optional; shown under Results
+  - { src: ../../assets/projects/healthdb/shot.png, alt: ..., caption: ... }
+video: { embed: https://www.youtube-nocookie.com/embed/<id>, title: ... }   # optional; an embed URL
+next: [What you'd do next, ...]   # rendered as "What's next"
+draft: true                    # drafts show in `npm run dev` but aren't built for production
+```
+
+The Markdown body must have exactly these `##` sections, in order: **Overview**, **Architecture**, **What I built**, **Hard problems & decisions**, **Results**. The page adds the gallery, video, What's next and Links after them. A ` ```mermaid ` code block renders as a diagram.
+
+`npm run verify` checks pages in two places. `check:projects` checks the slug, the matching card, the image paths and that each image exists, and the section order. The build checks every frontmatter field against `src/content.config.ts`. Both checks include drafts. A page whose card is `"hidden"` has to stay a draft.
 
 ## Resume
 
