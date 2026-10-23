@@ -30,7 +30,8 @@ const projects = defineCollection({
         video: https.optional(),
         extra: z.array(z.strictObject({ label: z.string().trim().min(1), url: https })).optional(),
       }),
-      cover: z.strictObject({ src: image(), alt: z.string().trim().min(1) }),
+      // Optional, so a page can go live before it has a real image.
+      cover: z.strictObject({ src: image(), alt: z.string().trim().min(1) }).optional(),
       gallery: z
         .array(z.strictObject({ src: image(), alt: z.string().trim().min(1), caption: z.string().optional() }))
         .default([]),

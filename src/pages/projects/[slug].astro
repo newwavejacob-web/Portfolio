@@ -71,15 +71,17 @@ const sizes = "(min-width: 760px) 720px, calc(100vw - 32px)";
       </ul>
     </header>
 
-    <Image
-      class="cover"
-      src={p.cover.src}
-      alt={p.cover.alt}
-      widths={[480, 1080, 2160]}
-      sizes="(min-width: 1112px) 1048px, calc(100vw - 32px)"
-      loading="eager"
-      fetchpriority="high"
-    />
+    {p.cover && (
+      <Image
+        class="cover"
+        src={p.cover.src}
+        alt={p.cover.alt}
+        widths={[480, 1080, 2160]}
+        sizes="(min-width: 1112px) 1048px, calc(100vw - 32px)"
+        loading="eager"
+        fetchpriority="high"
+      />
+    )}
 
     <div class="prose">
       <Content />

@@ -56,7 +56,7 @@ team:                          # optional
 dates: { start: 2025-09, end: 2026-05 }   # leave out end for "present"
 status: in-progress            # in-progress | complete | archived
 links: { source: https://..., live: https://..., video: https://..., extra: [{ label: Docs, url: https://... }] }
-cover: { src: ../../assets/projects/healthdb/cover.png, alt: ... }
+cover: { src: ../../assets/projects/healthdb/cover.png, alt: ... }   # optional
 gallery:                       # optional; shown under Results
   - { src: ../../assets/projects/healthdb/shot.png, alt: ..., caption: ... }
 video: { embed: https://www.youtube-nocookie.com/embed/<id>, title: ... }   # optional; an embed URL

@@ -55,7 +55,6 @@
     "slug": "ble-mesh",
     "tagline": "Senior design: silicon to phone",
     "role": "Senior design · solo",
-    "hidden": true,
     "summary": "A Bluetooth Mesh network of EFR32MG24 sensor nodes using a custom vendor model and opcodes for telemetry. A SiW917 gateway bridges the mesh to MQTT and Firebase Realtime Database with per-node state tracking, and a bidirectional command path lets a React Native app toggle LEDs and change sensor intervals remotely.",
     "tags": [
       "C",

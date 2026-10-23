@@ -1,24 +1,19 @@
 ---
 # Written from the repo README (2026-10-23). Senior design, built solo after
-# the teammate dropped the course. Before publishing:
-#   - confirm the dates
-#   - replace the placeholder cover with a hardware photo
-#   - unhide the card in projects.json (the repo is public now), then set `draft: false`
+# the teammate dropped the course. Published without a cover; add a hardware
+# photo as `cover` when you have one.
 title: BLE Mesh Sensor Network
 slug: ble-mesh
 tagline: Bluetooth Mesh sensors to the cloud and back, from silicon to phone
 tags: [C, FreeRTOS, Bluetooth Mesh, Silicon Labs, MQTT, Firebase, React Native]
 role: Senior design. Built solo after my teammate dropped the course
 dates:
-  start: 2025-08 # TODO: confirm
-  end: 2026-07 # TODO: confirm
+  start: 2026-04
+  end: 2026-06
 status: complete
 links:
   source: https://github.com/newwavejacob-web/Sensor-Mesh
   video: https://www.youtube.com/watch?v=PuSSsGJGB6g
-cover:
-  src: ../../assets/projects/ble-mesh/cover.png
-  alt: BLE Mesh Sensor Network title card (placeholder)
 video:
   embed: https://www.youtube-nocookie.com/embed/PuSSsGJGB6g
   title: Demo and walkthrough of the sensor mesh running end to end
@@ -27,7 +22,7 @@ next:
   - Replace HTTPS command polling with an MQTT subscription or Firebase streaming.
   - Add Low Power Node / Friend support for battery-powered sensors, and scale past two nodes.
   - Lock down the Firebase database with Auth and security rules.
-draft: true
+draft: false
 ---
 
 ## Overview
