@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+
+# Private working files that live in this folder. Only public/Jacob-Roberts-Resume.pdf is published.
+/Jacob Roberts*
+/*.pages
+/*.docx*
+/PROJECT_INVENTORY.md

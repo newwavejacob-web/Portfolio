@@ -1,0 +1,83 @@
+---
+import "../styles/global.css";
+import ProjectCard from "../components/ProjectCard.astro";
+import { projects } from "../lib/projects";
+
+const name = "Jacob Roberts";
+const description =
+  "Computer Science graduate student at UCF working across systems programming, full-stack and app development, and firmware/embedded.";
+const email = "jacobrberts@gmail.com";
+const github = "https://github.com/newwavejacob-web";
+const linkedin = "https://www.linkedin.com/in/jacob-roberts-b8b84737b";
+const resume = "/Jacob-Roberts-Resume.pdf";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{name}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip" href="#projects">Skip to projects</a>
+
+    <header class="site-header wrap">
+      <a class="logo" href="/">JR</a>
+      <nav aria-label="Primary">
+        <a href="#projects">Projects</a>
+        <a href={resume}>Resume</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero wrap" aria-labelledby="about">
+        <p class="eyebrow">Computer Science Graduate Student · UCF</p>
+        <h1 id="about">{name}</h1>
+        <p class="lede">
+          I build things close to the metal and all the way up the stack: a Raft key-value store in Rust, a
+          Bluetooth-mesh sensor network on Silicon Labs hardware, a Unix shell and a compiler in C, and web and
+          iOS apps.
+        </p>
+        <p class="lede muted">
+          B.S. in Computer Science (2026), M.S. in Computer Science expected December 2027. Vice President of
+          CHIDA@UCF, where I help run hands-on workshops on digital logic, embedded systems, and FPGAs.
+        </p>
+        <div class="cta">
+          <a class="button primary" href={resume}>View resume (PDF)</a>
+          <a class="button" href={github} target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="button" href={linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </section>
+
+      <section id="projects" class="wrap" aria-labelledby="projects-heading">
+        <h2 id="projects-heading">Projects</h2>
+        <div class="grid">
+          {projects.map((p) => <ProjectCard project={p} />)}
+        </div>
+      </section>
+
+      <section id="contact" class="wrap contact" aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Contact</h2>
+        <p>Open to internships and full-time roles in systems, embedded, and full-stack engineering.</p>
+        <ul>
+          <li><a href={`mailto:${email}`}>{email}</a></li>
+          <li><a href={github} target="_blank" rel="noopener noreferrer">github.com/newwavejacob-web</a></li>
+          <li><a href={linkedin} target="_blank" rel="noopener noreferrer">linkedin.com/in/jacob-roberts-b8b84737b</a></li>
+          <li><a href={resume}>Resume (PDF)</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="wrap site-footer">
+      <p>© {new Date().getFullYear()} {name}</p>
+    </footer>
+  </body>
+</html>

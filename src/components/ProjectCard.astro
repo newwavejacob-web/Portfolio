@@ -1,0 +1,44 @@
+---
+import { STATUS_LABEL, type Project } from "../lib/projects";
+
+interface Props {
+  project: Project;
+}
+
+const { project: p } = Astro.props;
+
+const links = [
+  p.links.live && { label: "Live demo", url: p.links.live },
+  p.links.video && { label: "Watch demo", url: p.links.video },
+  { label: "Source", url: p.links.source },
+  ...(p.links.extra ?? []),
+].filter(Boolean) as { label: string; url: string }[];
+---
+
+<article class="card">
+  <header>
+    <div class="badges">
+      <span class={`status status-${p.status}`}>{STATUS_LABEL[p.status]}</span>
+      {p.inProgress && <span class="badge">In progress</span>}
+    </div>
+    <h3>{p.title}</h3>
+    <p class="tagline">
+      {p.tagline}
+      {p.role && <span class="role"> · {p.role}</span>}
+    </p>
+  </header>
+
+  <p class="summary">{p.summary}</p>
+
+  <ul class="tags" aria-label="Technologies">
+    {p.tags.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <nav class="links" aria-label={`${p.title} links`}>
+    {links.map((l) => (
+      <a href={l.url} target="_blank" rel="noopener noreferrer">
+        {l.label} <span aria-hidden="true">↗</span>
+      </a>
+    ))}
+  </nav>
+</article>
