@@ -6,3 +6,4 @@ export const email = "jacobrberts@gmail.com";
 export const github = "https://github.com/newwavejacob-web";
 export const linkedin = "https://www.linkedin.com/in/jacob-roberts-b8b84737b";
 export const resume = "/Jacob-Roberts-Resume.pdf";
+export const chida = "https://linktr.ee/chidaUCF";

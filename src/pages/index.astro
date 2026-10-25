@@ -4,7 +4,7 @@ import ProjectCard from "../components/ProjectCard.astro";
 import FilingDrawer from "../components/FilingDrawer.astro";
 import { projects } from "../lib/projects";
 import { projectDates, publishedPages } from "../lib/projectPages";
-import { name, description, email, github, linkedin, resume } from "../lib/site";
+import { name, description, email, github, linkedin, resume, chida } from "../lib/site";
 
 const pages = new Map((await publishedPages()).map((p) => [p.data.slug, p]));
 const dates = await projectDates();
@@ -27,12 +27,13 @@ const sorted = [...projects].sort(
     </p>
     <p class="lede muted">
       B.S. in Computer Science (2026), M.S. in Computer Science expected December 2027. Vice President of
-      CHIDA@UCF, where I help run hands-on workshops on digital logic, embedded systems, and FPGAs.
+      <a href={chida} target="_blank" rel="noopener noreferrer">CHIDA@UCF</a>, where I help run hands-on workshops on digital logic, embedded systems, and FPGAs.
     </p>
     <div class="cta">
       <a class="button primary" href={resume}>View resume (PDF)</a>
       <a class="button" href={github} target="_blank" rel="noopener noreferrer">GitHub</a>
       <a class="button" href={linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a class="button" href={chida} target="_blank" rel="noopener noreferrer">CHIDA@UCF</a>
     </div>
   </section>
 
