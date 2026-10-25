@@ -29,7 +29,7 @@ next:
   - Finish the on-device verification pass for the branded shield and per-app usage unlocks.
   - First-run onboarding, a settings screen for the economy tunables, and a larger question bank (more GRE, then SAT and LSAT).
   - Request Apple's Family Controls distribution entitlement for all four bundle IDs, then ship a TestFlight build.
-draft: true
+draft: false
 ---
 
 ## Overview

@@ -21,7 +21,7 @@ next:
   - Fix the known bugs from the audit, starting with the history-recall buffer overflow and the realloc leaks cppcheck reports.
   - Support `;`, `&&`, and `||`, then pipelines with more than two commands. Each already has an expected-failure test waiting.
   - Rename the GitHub repo to match the Conch name.
-draft: true
+draft: false
 ---
 
 ## Overview

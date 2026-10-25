@@ -20,7 +20,7 @@ next:
   - Rename the repo to pl0-compiler and remove the generated output files.
   - Add a folder of sample programs (factorial, nested procedures, recursion) with expected output, and a `make test` that diffs them.
   - Report several syntax errors per run instead of stopping at the first one.
-draft: true
+draft: false
 ---
 
 ## Overview

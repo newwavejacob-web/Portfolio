@@ -31,7 +31,7 @@ next:
   - Forward client writes to the leader instead of rejecting them on followers.
   - Cluster membership changes (adding and removing nodes while running).
   - Benchmark throughput and failover time, and publish the numbers.
-draft: true
+draft: false
 ---
 
 ## Overview

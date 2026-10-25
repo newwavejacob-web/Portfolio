@@ -20,7 +20,7 @@ next:
   - A bounding volume hierarchy over the atoms, so each ray tests a handful of spheres instead of all of them.
   - Phong highlights and shadow rays for depth.
   - Clean up the leftover LearnOpenGL assets and add build steps and a screenshot to the README.
-draft: true
+draft: false
 ---
 
 ## Overview

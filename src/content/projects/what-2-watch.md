@@ -21,7 +21,7 @@ next:
   - Server-render the catalog so search engines see more than an empty React shell.
   - Learn from watch history and "not what I meant" feedback instead of only excluding seen titles.
   - Move from the in-memory vector scan to an approximate nearest-neighbor index once the catalog grows past a few thousand titles.
-draft: true
+draft: false
 ---
 
 ## Overview

@@ -26,7 +26,7 @@ cover:
 next:
   - A browser build on itch.io so anyone can play it in one click.
   - Bring seal-bound.com back up and link the playable build from it.
-draft: true
+draft: false
 ---
 
 ## Overview

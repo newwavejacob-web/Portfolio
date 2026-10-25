@@ -17,7 +17,7 @@ npm run verify       # check project pages, build, then check every internal and
 
 All project cards come from **`src/data/projects.json`**. To add or upgrade a project, edit that file; no HTML changes needed.
 
-The homepage shows projects as folders in a filing drawer (`src/components/FilingDrawer.astro`), newest first by each page's `dates.start`. Drafts count for the date only: a folder shows a cover and a **Read case study** link only when its page is published. Without JavaScript the page falls back to the plain card grid (`ProjectCard.astro`).
+The homepage shows projects as folders in a filing drawer (`src/components/FilingDrawer.astro`), newest first by each page's `dates.start`. Drafts count for the date only: a folder shows a cover and a **Project page →** link only when its page is published. Without JavaScript the page falls back to the plain card grid (`ProjectCard.astro`).
 
 ```jsonc
 {

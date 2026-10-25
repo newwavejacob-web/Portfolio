@@ -582,7 +582,7 @@ section {
     align-items: start;
   }
   /* Narrow drawers: taller folders, and a shorter summary beside a cover
-     (the full one is on the case study page). */
+     (the full one is on the project page). */
   @media (max-width: 959.98px) {
     .drawer {
       --folder-h: 460px;

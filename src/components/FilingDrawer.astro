@@ -13,7 +13,7 @@ interface Props {
     // Set when the project has a published page at /projects/<slug>.
     pageUrl?: string;
     dates?: ProjectPage["data"]["dates"];
-    // Only published pages pass a cover; drafts' covers are placeholders.
+    // From the published page, if it has one.
     cover?: ProjectPage["data"]["cover"];
   }[];
 }
@@ -95,7 +95,7 @@ const pos = (d: number) => (d === 0 ? "front" : d > DEPTH ? "far" : "behind");
               <nav class="links" aria-label={`${p.title} links`}>
                 {pageUrl && (
                   <a href={pageUrl}>
-                    Read case study <span aria-hidden="true">→</span>
+                    Project page <span aria-hidden="true">→</span>
                   </a>
                 )}
                 {projectLinks(p).map((l) => (
