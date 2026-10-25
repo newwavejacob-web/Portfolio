@@ -9,7 +9,7 @@ tagline: Movie, TV, and anime recommendations by mood instead of genre
 tags: [Go, Gin, React, SQLite, OpenAI, Docker, Caddy]
 role: Solo project. Deployment and infrastructure, with the recommendation engine built alongside Claude
 dates:
-  start: 2026-01
+  start: 2025-06
 status: in-progress
 links:
   source: https://github.com/newwavejacob-web/What-2-Watch
