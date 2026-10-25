@@ -61,3 +61,13 @@ if (dupe) throw new Error(`projects.json: duplicate slug "${dupe.slug}"`);
 
 // Hidden cards are still validated, so they're ready the moment you flip them on.
 export const projects: Project[] = all.filter((p) => !p.hidden);
+
+// Outbound links in display order, shared by the card grid and the filing drawer.
+export function projectLinks(p: Project): { label: string; url: string }[] {
+  return [
+    p.links.live && { label: "Live demo", url: p.links.live },
+    p.links.video && { label: "Watch demo", url: p.links.video },
+    { label: "Source", url: p.links.source },
+    ...(p.links.extra ?? []),
+  ].filter(Boolean) as { label: string; url: string }[];
+}

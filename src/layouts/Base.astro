@@ -24,6 +24,8 @@ const { title, description, type = "website", skipTo = { href: "#main", label: "
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Set before first paint so CSS can swap no-JS fallbacks (the project grid) for enhanced views without a flash. -->
+    <script is:inline>document.documentElement.classList.add("js");</script>
   </head>
   <body>
     <a class="skip" href={skipTo.href}>{skipTo.label}</a>

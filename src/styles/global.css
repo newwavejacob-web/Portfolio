@@ -10,6 +10,12 @@
   --live: #1a7f37;
   --video: #8250df;
   --source: #57606a;
+  --manila: #efe0b9;
+  --manila-back: #e4d09c;
+  --manila-edge: #cbb47c;
+  --manila-shade: #b9a067;
+  --manila-ink: #3b3122;
+  --manila-muted: #66573b;
   --radius: 12px;
   --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -29,6 +35,12 @@
     --live: #4ac26b;
     --video: #b392f0;
     --source: #9ba1a8;
+    --manila: #3a3426;
+    --manila-back: #312c20;
+    --manila-edge: #4c4431;
+    --manila-shade: #1c1a14;
+    --manila-ink: #eee4c8;
+    --manila-muted: #bcae8a;
   }
 }
 
@@ -62,7 +74,8 @@ a {
 }
 
 a:focus-visible,
-.button:focus-visible {
+.button:focus-visible,
+.drawer button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 4px;
@@ -296,6 +309,486 @@ section {
 .card-title:hover {
   color: var(--accent);
   text-decoration: underline;
+}
+
+/* Filing drawer (components/FilingDrawer.astro). It replaces the project grid
+   only when JS runs; without JS the grid shows. 700px and up it's a 3D drawer,
+   below that a stack of folders that open in place. */
+.drawer {
+  display: none;
+  --tab-h: 34px;
+  --step-y: 24px; /* how far each folder behind sits higher… */
+  --step-z: 60px; /* …and further back */
+  --depth: 4; /* folders visible behind the front one */
+  --folder-h: 400px;
+  --sunk: 48px; /* how much of the front folder the drawer front hides */
+  --spring: linear(0, 0.049, 0.172, 0.334, 0.508, 0.674, 0.819, 0.936, 1.023, 1.082, 1.114, 1.126, 1.122, 1.109, 1.089, 1.067, 1.046, 1.027, 1.011, 0.999, 0.991, 0.986, 0.984, 0.984, 0.986, 0.988, 0.991, 0.994, 0.996, 0.998, 1);
+}
+.js .drawer {
+  display: block;
+}
+.js .project-grid {
+  display: none;
+}
+.drawer-hint {
+  margin: -8px 0 12px;
+  font: 12px var(--mono);
+  color: var(--muted);
+}
+.drawer-hint-touch,
+.folder-open-hint {
+  display: none;
+}
+@media (min-width: 700px) {
+  .folder[data-pos="front"] .folder-open-hint {
+    display: block;
+  }
+}
+.folder-tab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  border: 1px solid var(--manila-edge);
+  color: var(--manila-ink);
+  font: 600 13px var(--font);
+  text-align: left;
+  cursor: pointer;
+}
+.folder-tab-title {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.folder-tab-date {
+  flex: none;
+  font: 11px var(--mono);
+  color: var(--manila-muted);
+}
+.folder {
+  color: var(--manila-ink);
+}
+.folder-flap-title {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.folder-flap .tagline,
+.folder-dates {
+  color: var(--manila-muted);
+}
+.folder-flap .badges {
+  margin-top: 14px;
+}
+.folder-flap .status,
+.folder-flap .badge {
+  border-color: var(--manila-edge);
+}
+.folder-dates {
+  margin: 10px 0 0;
+  font: 12px var(--mono);
+}
+.folder-sheet {
+  position: relative;
+  display: grid;
+  gap: 20px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.folder-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.folder-info h3 {
+  margin: 0;
+  padding-right: 40px;
+  font-size: 1.3rem;
+}
+.folder-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.folder-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  font: 20px/1 var(--font);
+  cursor: pointer;
+}
+.folder-close:hover {
+  color: var(--text);
+}
+.drawer-front {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76px;
+  margin-top: calc(var(--sunk) * -1);
+  padding-inline: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px 6px var(--radius) var(--radius);
+  box-shadow: 0 12px 28px -20px rgb(0 0 0 / 0.5);
+}
+.drawer-plate {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 180px;
+  font: 600 12px var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+/* The handle */
+.drawer-plate::after {
+  content: "";
+  flex: 0 0 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--tag-bg);
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.3);
+}
+.drawer-flip {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  font: 22px/1 var(--font);
+  cursor: pointer;
+}
+.drawer-flip:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+@media (min-width: 700px) {
+  .drawer-stage {
+    position: relative;
+    height: calc(var(--depth) * var(--step-y) + var(--tab-h) + var(--folder-h));
+    perspective: 1600px;
+    perspective-origin: 50% 0;
+    transform-style: preserve-3d; /* one 3D context, so tabs and folders depth-sort together */
+    touch-action: pan-y;
+  }
+  /* Tabs and folders are separate layers (a tablist may only hold tabs), so
+     each tab gets its folder's --d and the same transform. */
+  .drawer-tabs,
+  .drawer-folders {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    pointer-events: none;
+  }
+  .folder-tab,
+  .folder {
+    --y: calc(var(--d) * var(--step-y) * -1);
+    --z: calc(var(--d) * var(--step-z) * -1);
+    --shade: calc(max(0, min(var(--d), var(--depth))) * 12%);
+    position: absolute;
+    pointer-events: auto;
+    transform: translate3d(0, calc(var(--y) + var(--lift, 0px) + var(--pull-y, 0px)), calc(var(--z) + var(--pull-z, 0px)))
+      rotateX(calc(var(--lean, 0deg) + var(--ty, 0deg))) rotateY(var(--tx, 0deg));
+    /* Visibility flips on at once (so a folder can take focus as it arrives)
+       and off only after the fade; see the hidden states below. */
+    transition:
+      transform 0.7s var(--spring),
+      opacity 0.3s ease,
+      visibility 0s;
+    background: color-mix(in srgb, var(--manila-back), var(--manila-shade) var(--shade));
+  }
+  .folder-tab {
+    top: calc(var(--depth) * var(--step-y));
+    left: calc(12px + var(--slot) * (100% - 24px) / 4);
+    width: calc((100% - 24px) / 4 - 8px);
+    height: calc(var(--tab-h) + 1px);
+    padding: 7px 12px 0;
+    border-bottom: 0;
+    border-radius: 8px 8px 0 0;
+    /* Lean and tilt around the folder, not the tab */
+    transform-origin: 50% calc(100% + var(--folder-h));
+  }
+  .folder {
+    top: calc(var(--depth) * var(--step-y) + var(--tab-h));
+    left: 0;
+    width: 100%;
+    height: var(--folder-h);
+    border: 1px solid var(--manila-edge);
+    border-radius: 10px 10px 0 0;
+    transform-origin: 50% 100%;
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+  .folder-flap {
+    position: absolute;
+    inset: 14px -1px 0;
+    padding: 22px 28px;
+    background: color-mix(in srgb, var(--manila), var(--manila-shade) var(--shade));
+    border-top: 1px solid var(--manila-edge);
+    border-radius: 3px 3px 0 0;
+    transform: rotateX(var(--flap, 0deg));
+    transform-origin: 50% 100%;
+    backface-visibility: hidden;
+    transition:
+      transform 0.6s var(--spring),
+      opacity 0.3s ease 0.15s,
+      visibility 0.3s 0.15s;
+  }
+  .folder-open-hint {
+    position: absolute;
+    left: 28px;
+    bottom: calc(var(--sunk) + 14px);
+    font: 12px var(--mono);
+    color: var(--manila-muted);
+  }
+  .folder-sheet {
+    position: absolute;
+    inset: 14px;
+    padding: 24px;
+    overflow: auto;
+    cursor: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s;
+  }
+  .folder-sheet.has-cover {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: start;
+  }
+  /* Narrow drawers: taller folders, and a shorter summary beside a cover
+     (the full one is on the case study page). */
+  @media (max-width: 959.98px) {
+    .drawer {
+      --folder-h: 460px;
+    }
+    .folder-sheet.has-cover {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    }
+    .has-cover .summary {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      overflow: hidden;
+    }
+  }
+  /* A sheen that follows the cursor over a tilted folder */
+  .folder::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.16), transparent 55%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateZ(1px);
+    transition: opacity 0.3s ease;
+  }
+
+  /* Positions: behind the front folder, flipped past it (leaning forward into
+     the drawer), or too deep to show. */
+  .folder-tab[data-pos="past"],
+  .folder[data-pos="past"] {
+    --lean: -80deg;
+    --pull-y: 30px;
+  }
+  :is(.folder-tab, .folder):is([data-pos="past"], [data-pos="far"]) {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      transform 0.7s var(--spring),
+      opacity 0.3s ease,
+      visibility 0s 0.3s;
+  }
+  .drawer:not([data-open]) .is-hover:is([data-pos="front"], [data-pos="behind"]) {
+    --lift: -10px;
+  }
+
+  /* Open: the front folder springs up out of the drawer and its flap drops. */
+  .drawer[data-open] [data-pos="front"] {
+    --pull-y: -76px;
+    --pull-z: 40px;
+    cursor: default;
+  }
+  .drawer[data-open] [data-pos="behind"] {
+    --lift: 16px;
+  }
+  .drawer[data-open] .folder[data-pos="front"] {
+    transform-origin: 50% 50%;
+  }
+  .drawer[data-open] .folder-tab[data-pos="front"] {
+    transform-origin: 50% calc(100% + var(--folder-h) / 2);
+  }
+  .drawer[data-open] [data-pos="front"] .folder-flap {
+    --flap: -100deg;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      transform 0.6s var(--spring),
+      opacity 0.25s ease 0.1s,
+      visibility 0.25s 0.1s;
+  }
+  .drawer[data-open] [data-pos="front"] .folder-sheet {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.12s;
+  }
+  .is-tilting {
+    transition:
+      transform 0.15s ease-out,
+      opacity 0.3s ease;
+  }
+  .folder.is-tilting::after {
+    opacity: 1;
+  }
+}
+
+/* No spring, lean or depth: folders sit flat and open with a fade. */
+@media (min-width: 700px) and (prefers-reduced-motion: reduce) {
+  .drawer-stage,
+  .drawer-tabs,
+  .drawer-folders {
+    perspective: none;
+    transform-style: flat;
+  }
+  /* Without depth sorting, stack nearer folders on top */
+  .folder-tab,
+  .folder {
+    z-index: calc(50 - var(--d));
+    transform: translateY(var(--y));
+    transition:
+      opacity 0.25s ease,
+      visibility 0s;
+  }
+  :is(.folder-tab, .folder):is([data-pos="past"], [data-pos="far"]),
+  .drawer[data-open] [data-pos="behind"] {
+    transition:
+      opacity 0.25s ease,
+      visibility 0s 0.25s;
+  }
+  .drawer-stage {
+    isolation: isolate; /* keeps the z-indexes below under the drawer front */
+  }
+  .drawer[data-open] [data-pos="front"] {
+    transform: translateY(calc(var(--sunk) * -1 - 8px));
+  }
+  .drawer[data-open] [data-pos="behind"] {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .folder-flap,
+  .drawer[data-open] [data-pos="front"] .folder-flap {
+    transform: none;
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s;
+  }
+}
+
+@media (max-width: 699.98px) {
+  .drawer-hint-keys,
+  .drawer-front,
+  .folder-flap {
+    display: none;
+  }
+  .drawer-hint-touch {
+    display: inline;
+  }
+  /* Tabs and folders interleave in one column: tab, its folder, next tab… */
+  .drawer-stage {
+    display: grid;
+    grid-template-rows: repeat(var(--rows), auto);
+  }
+  .drawer-tabs,
+  .drawer-folders {
+    display: grid;
+    grid-row: 1 / -1;
+    grid-column: 1;
+    grid-template-rows: subgrid;
+    pointer-events: none;
+  }
+  .folder-tab,
+  .folder {
+    grid-row: var(--row);
+    pointer-events: auto;
+  }
+  .folder-tab {
+    position: relative;
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: var(--manila);
+    font-size: 15px;
+  }
+  /* The folder's ear, staggered like a real drawer */
+  .folder-tab::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: calc(12px + var(--slot) * 20%);
+    width: 30%;
+    height: 12px;
+    background: inherit;
+    border: 1px solid var(--manila-edge);
+    border-bottom: 0;
+    border-radius: 8px 8px 0 0;
+  }
+  .folder {
+    display: none;
+  }
+  .drawer[data-open] .folder-tab[data-pos="front"] {
+    border-bottom-color: transparent;
+    border-radius: 10px 10px 0 0;
+  }
+  .drawer[data-open] .folder[data-pos="front"] {
+    display: block;
+    padding: 0 10px 10px;
+    background: var(--manila);
+    border: 1px solid var(--manila-edge);
+    border-top: 0;
+    border-radius: 0 0 10px 10px;
+    transition:
+      opacity 0.25s ease,
+      translate 0.3s ease;
+    @starting-style {
+      opacity: 0;
+      translate: 0 -8px;
+    }
+  }
+  .folder-sheet {
+    padding: 16px;
+  }
+}
+@media (max-width: 699.98px) and (prefers-reduced-motion: reduce) {
+  .drawer[data-open] .folder[data-pos="front"] {
+    transition: opacity 0.25s ease;
+  }
 }
 
 /* Project pages */

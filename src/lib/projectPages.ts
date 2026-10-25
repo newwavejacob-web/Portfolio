@@ -19,3 +19,14 @@ const monthYear = new Intl.DateTimeFormat("en-US", { month: "short", year: "nume
 export function formatDates({ start, end }: ProjectPage["data"]["dates"]): string {
   return `${monthYear.format(start)} – ${end ? monthYear.format(end) : "present"}`;
 }
+
+// Dates for every page, drafts included: a project's dates are card-level
+// facts (sort order, folder tab), not page content. Drafts' bodies and
+// placeholder covers still never reach production.
+export async function projectDates(): Promise<Map<string, ProjectPage["data"]["dates"]>> {
+  return new Map((await getCollection("projects")).map((p) => [p.data.slug, p.data.dates]));
+}
+
+export function formatMonth(date: Date): string {
+  return monthYear.format(date);
+}

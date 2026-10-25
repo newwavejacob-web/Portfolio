@@ -1,0 +1,315 @@
+---
+// The project list as manila folders in a filing drawer. It enhances the card
+// grid: the page shows this only when JS runs (the `js` class from Base.astro)
+// and shows the grid otherwise. Semantics follow the ARIA tabs pattern: each
+// folder tab is a `tab`, each folder a `tabpanel`; arrows flip, Enter opens.
+import { Image } from "astro:assets";
+import { STATUS_LABEL, projectLinks, type Project } from "../lib/projects";
+import { formatDates, formatMonth, type ProjectPage } from "../lib/projectPages";
+
+interface Props {
+  items: {
+    project: Project;
+    // Set when the project has a published page at /projects/<slug>.
+    pageUrl?: string;
+    dates?: ProjectPage["data"]["dates"];
+    // Only published pages pass a cover; drafts' covers are placeholders.
+    cover?: ProjectPage["data"]["cover"];
+  }[];
+}
+
+const { items } = Astro.props;
+
+// Folders shown behind the front one; keep in sync with DEPTH in the script.
+const DEPTH = 4;
+const pos = (d: number) => (d === 0 ? "front" : d > DEPTH ? "far" : "behind");
+---
+
+<div class="drawer" data-drawer>
+  <p class="drawer-hint" id="drawer-hint">
+    <span class="drawer-hint-keys">← → flip through · Enter opens · Esc closes</span>
+    <span class="drawer-hint-touch">Tap a folder to open it</span>
+  </p>
+  <div class="drawer-stage" style={`--rows:${items.length * 2}`}>
+    <div class="drawer-tabs" role="tablist" aria-label="Projects, newest first" aria-describedby="drawer-hint">
+      {items.map(({ project: p, dates }, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="folder-tab"
+          id={`folder-tab-${p.slug}`}
+          aria-controls={`folder-${p.slug}`}
+          aria-selected={i === 0 ? "true" : "false"}
+          aria-expanded="false"
+          tabindex={i === 0 ? 0 : -1}
+          data-pos={pos(i)}
+          style={`--d:${i};--slot:${i % 4};--row:${i * 2 + 1}`}
+        >
+          <span class="folder-tab-title">{p.title}</span>
+          {dates && <span class="folder-tab-date">{formatMonth(dates.start)}</span>}
+        </button>
+      ))}
+    </div>
+
+    <div class="drawer-folders">
+      {items.map(({ project: p, pageUrl, dates, cover }, i) => (
+        <div
+          class="folder"
+          id={`folder-${p.slug}`}
+          role="tabpanel"
+          aria-labelledby={`folder-tab-${p.slug}`}
+          data-pos={pos(i)}
+          aria-hidden={i !== 0 ? "true" : undefined}
+          style={`--d:${i};--row:${i * 2 + 2}`}
+        >
+          <div class="folder-flap">
+            <p class="folder-flap-title" aria-hidden="true">{p.title}</p>
+            <p class="tagline">{p.tagline}</p>
+            <div class="badges">
+              <span class={`status status-${p.status}`}>{STATUS_LABEL[p.status]}</span>
+              {p.inProgress && <span class="badge">In progress</span>}
+            </div>
+            {dates && <p class="folder-dates">{formatDates(dates)}</p>}
+            <span class="folder-open-hint" aria-hidden="true">Open folder ↑</span>
+          </div>
+
+          <div class={`folder-sheet${cover ? " has-cover" : ""}`} inert>
+            {cover && (
+              <Image class="folder-cover" src={cover.src} alt={cover.alt} widths={[480, 960]} sizes="(min-width: 700px) 480px, 100vw" />
+            )}
+            <div class="folder-info">
+              <div class="badges">
+                <span class={`status status-${p.status}`}>{STATUS_LABEL[p.status]}</span>
+                {p.inProgress && <span class="badge">In progress</span>}
+              </div>
+              <h3>{pageUrl ? <a class="card-title" href={pageUrl}>{p.title}</a> : p.title}</h3>
+              <p class="tagline">
+                {p.tagline}
+                {p.role && <span class="role"> · {p.role}</span>}
+                {dates && <span> · {formatDates(dates)}</span>}
+              </p>
+              <p class="summary">{p.summary}</p>
+              <ul class="tags" aria-label="Technologies">
+                {p.tags.map((t) => <li>{t}</li>)}
+              </ul>
+              <nav class="links" aria-label={`${p.title} links`}>
+                {pageUrl && (
+                  <a href={pageUrl}>
+                    Read case study <span aria-hidden="true">→</span>
+                  </a>
+                )}
+                {projectLinks(p).map((l) => (
+                  <a href={l.url} target="_blank" rel="noopener noreferrer">
+                    {l.label} <span aria-hidden="true">↗</span>
+                  </a>
+                ))}
+              </nav>
+            </div>
+            <button type="button" class="folder-close" aria-label={`Close ${p.title}`}>
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="drawer-front">
+    <button type="button" class="drawer-flip" data-flip="-1" aria-label="Previous project" disabled>
+      <span aria-hidden="true">‹</span>
+    </button>
+    <div class="drawer-plate" aria-hidden="true">
+      <span>Projects</span>
+      <span class="drawer-count">1 / {items.length}</span>
+    </div>
+    <button type="button" class="drawer-flip" data-flip="1" aria-label="Next project" disabled={items.length < 2}>
+      <span aria-hidden="true">›</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  // Folders shown behind the front one; keep in sync with DEPTH above.
+  const DEPTH = 4;
+  const SWIPE_PX = 40;
+  const TILT_DEG = 4;
+
+  const desktop = matchMedia("(min-width: 700px)");
+  const calm = matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-drawer]")) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const folders = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    const sheets = folders.map((f) => f.querySelector<HTMLElement>(".folder-sheet")!);
+    const stage = root.querySelector<HTMLElement>(".drawer-stage")!;
+    const count = root.querySelector<HTMLElement>(".drawer-count")!;
+    const [prev, next] = root.querySelectorAll<HTMLButtonElement>("[data-flip]");
+    let selected = 0;
+    let open = false;
+
+    function render() {
+      tabs.forEach((tab, i) => {
+        const d = i - selected;
+        const pos = d < 0 ? "past" : d === 0 ? "front" : d > DEPTH ? "far" : "behind";
+        for (const el of [tab, folders[i]]) {
+          el.style.setProperty("--d", String(d));
+          el.dataset.pos = pos;
+        }
+        tab.setAttribute("aria-selected", String(d === 0));
+        tab.setAttribute("aria-expanded", String(d === 0 && open));
+        tab.tabIndex = d === 0 ? 0 : -1;
+        // Not inert: pointers can still flip to a folder behind by clicking it.
+        if (d === 0) folders[i].removeAttribute("aria-hidden");
+        else folders[i].setAttribute("aria-hidden", "true");
+        sheets[i].inert = !(d === 0 && open);
+      });
+      root.toggleAttribute("data-open", open);
+      count.textContent = `${selected + 1} / ${tabs.length}`;
+      prev.disabled = selected === 0;
+      next.disabled = selected === tabs.length - 1;
+    }
+
+    function select(i: number, focus = false) {
+      i = Math.max(0, Math.min(tabs.length - 1, i));
+      if (i !== selected) {
+        open = false;
+        resetTilt();
+        selected = i;
+        render();
+      }
+      if (focus) tabs[i].focus();
+    }
+
+    function setOpen(value: boolean, focus = false) {
+      open = value;
+      if (!open) resetTilt();
+      render();
+      if (focus) tabs[selected].focus();
+    }
+
+    // Tabs: click the front folder to open/close it, any other to flip to it.
+    // In the stacked phone layout a tap on another folder opens it in place.
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => {
+        if (i === selected) setOpen(!open);
+        else {
+          select(i);
+          if (!desktop.matches) setOpen(true);
+        }
+      });
+    });
+
+    root.querySelector('[role="tablist"]')!.addEventListener("keydown", (e) => {
+      const key = (e as KeyboardEvent).key;
+      const target = {
+        ArrowLeft: selected - 1,
+        ArrowUp: selected - 1,
+        ArrowRight: selected + 1,
+        ArrowDown: selected + 1,
+        Home: 0,
+        End: tabs.length - 1,
+      }[key];
+      if (target === undefined) return;
+      e.preventDefault();
+      select(target, true);
+    });
+
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && open) {
+        e.preventDefault();
+        setOpen(false, true);
+      }
+    });
+
+    folders.forEach((folder, i) => {
+      // The flap isn't focusable (the tab is the keyboard control); this is a
+      // bigger click target for pointers.
+      folder.querySelector(".folder-flap")!.addEventListener("click", () => {
+        if (i === selected) setOpen(true);
+        else select(i);
+      });
+      folder.querySelector(".folder-close")!.addEventListener("click", () => setOpen(false, true));
+    });
+
+    prev.addEventListener("click", () => select(selected - 1));
+    next.addEventListener("click", () => select(selected + 1));
+
+    // Hover lift: a folder's tab and body are separate elements (the tablist
+    // may only contain tabs), so hovering either lifts both.
+    tabs.forEach((tab, i) => {
+      for (const el of [tab, folders[i].querySelector(".folder-flap")!]) {
+        el.addEventListener("pointerenter", (e) => {
+          if ((e as PointerEvent).pointerType === "mouse") {
+            tab.classList.add("is-hover");
+            folders[i].classList.add("is-hover");
+          }
+        });
+        el.addEventListener("pointerleave", () => {
+          tab.classList.remove("is-hover");
+          folders[i].classList.remove("is-hover");
+        });
+      }
+    });
+
+    // Swipe to flip (drawer layout only). A swipe swallows the click it ends with.
+    let start: { x: number; y: number } | null = null;
+    let swiped = false;
+    stage.addEventListener("pointerdown", (e) => {
+      const fromSheet = (e.target as Element).closest(".folder-sheet");
+      start = desktop.matches && e.isPrimary && !fromSheet ? { x: e.clientX, y: e.clientY } : null;
+    });
+    stage.addEventListener("pointerup", (e) => {
+      if (!start) return;
+      const dx = e.clientX - start.x;
+      const dy = e.clientY - start.y;
+      start = null;
+      if (Math.abs(dx) > SWIPE_PX && Math.abs(dx) > Math.abs(dy)) {
+        swiped = true;
+        select(selected + (dx < 0 ? 1 : -1));
+      }
+    });
+    stage.addEventListener("pointercancel", () => (start = null));
+    stage.addEventListener(
+      "click",
+      (e) => {
+        if (swiped) {
+          e.stopPropagation();
+          swiped = false;
+        }
+      },
+      true,
+    );
+
+    // An open folder tilts toward the cursor, with a highlight that follows it.
+    function resetTilt() {
+      for (const el of [...tabs, ...folders]) {
+        el.classList.remove("is-tilting");
+        el.style.removeProperty("--tx");
+        el.style.removeProperty("--ty");
+      }
+    }
+    folders.forEach((folder, i) => {
+      folder.addEventListener("pointermove", (e) => {
+        if (!open || i !== selected || !desktop.matches || calm.matches || !finePointer.matches) return;
+        const r = folder.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        // The tab tilts with its folder.
+        for (const el of [tabs[i], folder]) {
+          el.classList.add("is-tilting");
+          el.style.setProperty("--tx", `${(x - 0.5) * 2 * TILT_DEG}deg`);
+          el.style.setProperty("--ty", `${(0.5 - y) * 2 * TILT_DEG}deg`);
+        }
+        folder.style.setProperty("--gx", `${x * 100}%`);
+        folder.style.setProperty("--gy", `${y * 100}%`);
+      });
+      folder.addEventListener("pointerleave", resetTilt);
+    });
+
+    // The phone layout opens folders in place; switching layouts keeps state.
+    desktop.addEventListener("change", resetTilt);
+
+    render();
+  }
+</script>

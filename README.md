@@ -1,6 +1,6 @@
 # Portfolio
 
-Personal portfolio site for Jacob Roberts. Static [Astro](https://astro.build) site, deployed to Cloudflare Pages on every push to `main`. No server. The only client-side JavaScript is Mermaid, which loads only on project pages that contain a diagram.
+Personal portfolio site for Jacob Roberts. Static [Astro](https://astro.build) site, deployed to Cloudflare Pages on every push to `main`. No server. Client-side JavaScript is limited to the homepage's project drawer and Mermaid, which loads only on project pages that contain a diagram.
 
 **Roadmap:** see [`TODO.md`](TODO.md) for the card-by-card checklist.
 
@@ -16,6 +16,8 @@ npm run verify       # check project pages, build, then check every internal and
 ## Editing projects
 
 All project cards come from **`src/data/projects.json`**. To add or upgrade a project, edit that file; no HTML changes needed.
+
+The homepage shows projects as folders in a filing drawer (`src/components/FilingDrawer.astro`), newest first by each page's `dates.start`. Drafts count for the date only: a folder shows a cover and a **Read case study** link only when its page is published. Without JavaScript the page falls back to the plain card grid (`ProjectCard.astro`).
 
 ```jsonc
 {

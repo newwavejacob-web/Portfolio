@@ -1,11 +1,19 @@
 ---
 import Base from "../layouts/Base.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import FilingDrawer from "../components/FilingDrawer.astro";
 import { projects } from "../lib/projects";
-import { publishedPages } from "../lib/projectPages";
+import { projectDates, publishedPages } from "../lib/projectPages";
 import { name, description, email, github, linkedin, resume } from "../lib/site";
 
-const pageSlugs = new Set((await publishedPages()).map((p) => p.data.slug));
+const pages = new Map((await publishedPages()).map((p) => [p.data.slug, p]));
+const dates = await projectDates();
+const pageUrl = (slug: string) => (pages.has(slug) ? `/projects/${slug}/` : undefined);
+
+// Newest first by start date. The sort is stable, so ties keep projects.json order.
+const sorted = [...projects].sort(
+  (a, b) => (dates.get(b.slug)?.start.getTime() ?? 0) - (dates.get(a.slug)?.start.getTime() ?? 0),
+);
 ---
 
 <Base title={name} description={description} skipTo={{ href: "#projects", label: "Skip to projects" }}>
@@ -30,10 +38,17 @@ const pageSlugs = new Set((await publishedPages()).map((p) => p.data.slug));
 
   <section id="projects" class="wrap" aria-labelledby="projects-heading">
     <h2 id="projects-heading">Projects</h2>
-    <div class="grid">
-      {projects.map((p) => (
-        <ProjectCard project={p} pageUrl={pageSlugs.has(p.slug) ? `/projects/${p.slug}/` : undefined} />
-      ))}
+    <FilingDrawer
+      items={sorted.map((p) => ({
+        project: p,
+        pageUrl: pageUrl(p.slug),
+        dates: dates.get(p.slug),
+        cover: pages.get(p.slug)?.data.cover,
+      }))}
+    />
+    {/* Without JS the drawer stays hidden and this grid shows instead. */}
+    <div class="grid project-grid">
+      {sorted.map((p) => <ProjectCard project={p} pageUrl={pageUrl(p.slug)} />)}
     </div>
   </section>
 
