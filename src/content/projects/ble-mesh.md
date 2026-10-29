@@ -1,7 +1,7 @@
 ---
 # Written from the repo README (2026-10-23). Senior design, built solo after
-# the teammate dropped the course. Published without a cover; add a hardware
-# photo as `cover` when you have one.
+# the teammate dropped the course. The cover is a plain title card; swap in a
+# hardware photo when you have one.
 title: BLE Mesh Sensor Network
 slug: ble-mesh
 tagline: Bluetooth Mesh sensors to the cloud and back, from silicon to phone
@@ -14,6 +14,9 @@ status: complete
 links:
   source: https://github.com/newwavejacob-web/Sensor-Mesh
   video: https://www.youtube.com/watch?v=PuSSsGJGB6g
+cover:
+  src: ../../assets/projects/ble-mesh/cover.png
+  alt: BLE Mesh title card
 video:
   embed: https://www.youtube-nocookie.com/embed/PuSSsGJGB6g
   title: Demo and walkthrough of the sensor mesh running end to end
