@@ -1,7 +1,7 @@
 ---
-# Written from the local README (2026-10-23). Replace the placeholder images
-# with device screenshots, add the demo video when it exists, then set
-# `draft: false`.
+# Written from the local README (2026-10-23). The cover is a plain title
+# card until there are device screenshots. Add them as the gallery (the
+# placeholders below are commented out) and the demo video when it exists.
 title: LockIN
 slug: lockin
 tagline: Study-to-unlock iOS app built on Screen Time
@@ -14,14 +14,14 @@ links:
   source: https://github.com/newwavejacob-web/LockIN
 cover:
   src: ../../assets/projects/lockin/cover.png
-  alt: LockIN title card (placeholder)
-gallery:
-  - src: ../../assets/projects/lockin/shield.png
-    alt: The branded LockIN shield covering a blocked app (placeholder)
-    caption: A blocked app shows LockIN's own shield. Its button hands the app off to LockIN through a notification.
-  - src: ../../assets/projects/lockin/drill.png
-    alt: The rolling GRE drill with the banked-minutes header (placeholder)
-    caption: The rolling drill. Each correct answer banks seconds right away, weighted toward your weakest topics.
+  alt: LockIN title card
+# gallery:
+#   - src: ../../assets/projects/lockin/shield.png
+#     alt: The branded LockIN shield covering a blocked app
+#     caption: A blocked app shows LockIN's own shield. Its button hands the app off to LockIN through a notification.
+#   - src: ../../assets/projects/lockin/drill.png
+#     alt: The rolling GRE drill with the banked-minutes header
+#     caption: The rolling drill. Each correct answer banks seconds right away, weighted toward your weakest topics.
 # video:
 #   embed: https://www.youtube-nocookie.com/embed/<id>
 #   title: Shield → drill → spend → automatic relock on a real device

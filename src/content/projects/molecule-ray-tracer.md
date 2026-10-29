@@ -1,8 +1,6 @@
 ---
 # Written from the MOLE-Renderer repo (2026-10-23). The repo was renamed from
 # Learning_OpenGL. If this started as a course assignment, say so in `role`.
-# Replace the placeholder cover with a render of dna.pdb, then set
-# `draft: false`.
 title: Molecule Ray Tracer
 slug: molecule-ray-tracer
 tagline: GPU ray tracing for PDB molecular structures with compute shaders
@@ -15,7 +13,7 @@ links:
   source: https://github.com/newwavejacob-web/MOLE-Renderer
 cover:
   src: ../../assets/projects/molecule-ray-tracer/cover.png
-  alt: A DNA molecule rendered as colored spheres (placeholder)
+  alt: A DNA molecule from dna.pdb ray traced as red, blue, black, and orange spheres
 next:
   - A bounding volume hierarchy over the atoms, so each ray tests a handful of spheres instead of all of them.
   - Phong highlights and shadow rays for depth.

@@ -1,8 +1,7 @@
 ---
 # Written from the repo, README, and AUDIT_FINDINGS.md (2026-10-23).
 # what2watch.win didn't respond on 2026-10-23, so there's no live link yet.
-# Add `live:` once the site is back, replace the placeholder cover with a
-# screenshot, then set `draft: false`.
+# Add `live:` once the site is back.
 title: What 2 Watch
 slug: what-2-watch
 tagline: Movie, TV, and anime recommendations by mood instead of genre
@@ -15,7 +14,11 @@ links:
   source: https://github.com/newwavejacob-web/What-2-Watch
 cover:
   src: ../../assets/projects/what-2-watch/cover.png
-  alt: What 2 Watch title card (placeholder)
+  alt: What 2 Watch's neon search page with the query "Give me high octane thriller movies"
+gallery:
+  - src: ../../assets/projects/what-2-watch/results.png
+    alt: Results grid for the thriller query, each card showing a vibe-match percentage and quality rating
+    caption: Results for "Give me high octane thriller movies", ranked by vibe match.
 next:
   - Bring what2watch.win back up and add uptime monitoring.
   - Server-render the catalog so search engines see more than an empty React shell.

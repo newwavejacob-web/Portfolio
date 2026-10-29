@@ -2,8 +2,7 @@
 # Written from the team repo's git history (2026-10-23). Teammates are listed
 # by their git author names. Confirm they're OK being named and check the
 # spelling before publishing. seal-bound.com didn't respond on 2026-10-23, so
-# it isn't linked. Replace the placeholder cover with a screenshot, then set
-# `draft: false`.
+# it isn't linked.
 title: Sealbound
 slug: sealbound
 tagline: 2D narrative RPG in Godot, made with a small team
@@ -22,7 +21,17 @@ links:
     - { label: Website source, url: https://github.com/newwavejacob-web/SealBound-Site }
 cover:
   src: ../../assets/projects/sealbound/cover.png
-  alt: Sealbound title card (placeholder)
+  alt: Sealbound's pixel-art title screen with a hanging wooden sign and New Game, Continue, Settings, Credits, and Exit buttons
+gallery:
+  - src: ../../assets/projects/sealbound/character-sprites.png
+    alt: Sheet of the main characters' portraits, walking and idle sprites, and sword-fighting frames
+    caption: The main characters' portraits, walk and idle cycles, and fighting animations.
+  - src: ../../assets/projects/sealbound/item-sprites.png
+    alt: Pixel-art item sprites grouped into weapons, armor, jewelry, food, and potions
+    caption: Item sprites for weapons, armor, jewelry, food, and potions.
+  - src: ../../assets/projects/sealbound/overworld-map.png
+    alt: Top-down overworld map with dirt paths, ponds, a farm field, and scattered buildings
+    caption: The overworld map that the area teleports connect.
 next:
   - A browser build on itch.io so anyone can play it in one click.
   - Bring seal-bound.com back up and link the playable build from it.

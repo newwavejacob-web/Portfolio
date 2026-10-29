@@ -2,8 +2,7 @@
 # Written from the Solaris-Shell repo, which now holds the modular Conch
 # version (2026-10-23). The homepage card still describes the old
 # single-file shell: update its title and summary to match. An asciinema
-# recording would make a good video. Replace the placeholder cover, then set
-# `draft: false`.
+# recording would make a good video.
 title: Conch
 slug: solaris-shell
 tagline: Interactive Unix shell in C with job control
@@ -16,7 +15,7 @@ links:
   source: https://github.com/newwavejacob-web/Solaris-Shell
 cover:
   src: ../../assets/projects/solaris-shell/cover.png
-  alt: Conch shell title card (placeholder)
+  alt: Conch's boot sequence in a terminal, with a large CONCH ASCII banner above the prompt
 next:
   - Fix the known bugs from the audit, starting with the history-recall buffer overflow and the realloc leaks cppcheck reports.
   - Support `;`, `&&`, and `||`, then pipelines with more than two commands. Each already has an expected-failure test waiting.
