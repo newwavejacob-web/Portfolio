@@ -2,7 +2,8 @@
 # Written from the local wire-up-wal-raft branch (2026-10-23). Five of those
 # commits aren't pushed yet, and GitHub's default branch is main, so push and
 # merge before publishing or the page describes code nobody can see.
-# Replace the placeholder images, then set `draft: false`.
+# The cover is a plain title card. The demo screenshots below are commented
+# out until real ones exist.
 title: HealthDB
 slug: healthdb
 tagline: Distributed key-value store on Raft, written in Rust
@@ -15,14 +16,14 @@ links:
   source: https://github.com/newwavejacob-web/HealthDB
 cover:
   src: ../../assets/projects/healthdb/cover.png
-  alt: HealthDB title card (placeholder)
-gallery:
-  - src: ../../assets/projects/healthdb/leader-election.png
-    alt: Terminal output from scripts/failover-demo.sh on a 5-node cluster (placeholder)
-    caption: scripts/failover-demo.sh kills the leader of a 5-node cluster, waits for a new one, and checks that the committed value survived.
-  - src: ../../assets/projects/healthdb/wal-recovery.png
-    alt: Log output from a node restoring its snapshot and replaying its WAL tail (placeholder)
-    caption: After a kill -9 of the whole cluster, each node loads its snapshot, replays its WAL tail, and the data is back.
+  alt: HealthDB title card
+# gallery:
+#   - src: ../../assets/projects/healthdb/leader-election.png
+#     alt: Terminal output from scripts/failover-demo.sh on a 5-node cluster
+#     caption: scripts/failover-demo.sh kills the leader of a 5-node cluster, waits for a new one, and checks that the committed value survived.
+#   - src: ../../assets/projects/healthdb/wal-recovery.png
+#     alt: Log output from a node restoring its snapshot and replaying its WAL tail
+#     caption: After a kill -9 of the whole cluster, each node loads its snapshot, replays its WAL tail, and the data is back.
 # video:
 #   embed: https://www.youtube-nocookie.com/embed/<id>
 #   title: 5-node cluster surviving a leader failure

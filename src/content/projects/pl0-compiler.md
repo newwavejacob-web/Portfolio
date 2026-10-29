@@ -1,7 +1,7 @@
 ---
 # Written from the repo (2026-10-23). Coursework from Spring 2025: check your
-# course's policy on publishing it. Replace the placeholder cover (a terminal
-# shot of `make run` works well), then set `draft: false`.
+# course's policy on publishing it. The cover is a plain title card; a terminal
+# shot of `make run` would make a good replacement.
 title: PL/0 Compiler
 slug: pl0-compiler
 tagline: Single-pass compiler and stack virtual machine in C
@@ -15,7 +15,7 @@ links:
   source: https://github.com/newwavejacob-web/MiniC-Compiler
 cover:
   src: ../../assets/projects/pl0-compiler/cover.png
-  alt: PL/0 Compiler title card (placeholder)
+  alt: PL/0 Compiler title card
 next:
   - Rename the repo to pl0-compiler and remove the generated output files.
   - Add a folder of sample programs (factorial, nested procedures, recursion) with expected output, and a `make test` that diffs them.
