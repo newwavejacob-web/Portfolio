@@ -188,16 +188,39 @@ const pos = (d: number) => (d === 0 ? "front" : d > DEPTH ? "far" : "behind");
       if (focus) tabs[selected].focus();
     }
 
-    // Tabs: click the front folder to open/close it, any other to flip to it.
-    // In the stacked phone layout a tap on another folder opens it in place.
-    tabs.forEach((tab, i) => {
-      tab.addEventListener("click", () => {
-        if (i === selected) setOpen(!open);
-        else {
-          select(i);
-          if (!desktop.matches) setOpen(true);
+    // Which folder a click is for. Safari hit-tests the 3D stack in DOM order,
+    // not depth, so a click on a tab can land on a folder further back; find
+    // the nearest visible tab under the pointer instead of trusting the target.
+    function folderAt(e: MouseEvent): number {
+      const target = e.target as Element;
+      if (e.detail > 0) {
+        const near = tabs
+          .map((tab, i) => ({ tab, i, d: i - selected }))
+          .filter(({ d }) => d >= 0 && d <= DEPTH)
+          .sort((a, b) => a.d - b.d);
+        for (const { tab, i } of near) {
+          const r = tab.getBoundingClientRect();
+          if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) return i;
         }
-      });
+      }
+      const tab = target.closest('[role="tab"]');
+      if (tab) return tabs.indexOf(tab as HTMLButtonElement);
+      const flap = target.closest(".folder-flap");
+      return flap ? folders.indexOf(flap.closest<HTMLElement>(".folder")!) : -1;
+    }
+
+    // Clicking the front folder's tab toggles it; clicking any other folder's
+    // tab (or the front flap) jumps straight to that project, open.
+    stage.addEventListener("click", (e) => {
+      if ((e.target as Element).closest(".folder-sheet")) return;
+      const i = folderAt(e);
+      if (i < 0) return;
+      // An open folder's flap is hidden, so this can only be its tab.
+      if (i === selected && open) setOpen(false);
+      else {
+        select(i);
+        setOpen(true);
+      }
     });
 
     root.querySelector('[role="tablist"]')!.addEventListener("keydown", (e) => {
@@ -222,15 +245,11 @@ const pos = (d: number) => (d === 0 ? "front" : d > DEPTH ? "far" : "behind");
       }
     });
 
-    folders.forEach((folder, i) => {
-      // The flap isn't focusable (the tab is the keyboard control); this is a
-      // bigger click target for pointers.
-      folder.querySelector(".folder-flap")!.addEventListener("click", () => {
-        if (i === selected) setOpen(true);
-        else select(i);
-      });
+    // The flap isn't focusable (the tab is the keyboard control); the stage
+    // click handler above makes it a bigger click target for pointers.
+    for (const folder of folders) {
       folder.querySelector(".folder-close")!.addEventListener("click", () => setOpen(false, true));
-    });
+    }
 
     prev.addEventListener("click", () => select(selected - 1));
     next.addEventListener("click", () => select(selected + 1));
