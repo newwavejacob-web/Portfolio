@@ -49,7 +49,7 @@ A search runs in five steps: embed the query with `text-embedding-3-small`, load
 
 ## What I built
 
-The backend wasn't the point; I already know how to write one. I started from a Go CRUD web app I'd built about three years earlier and used Claude to grow it into the recommendation engine quickly. What I wanted to learn was how to deploy, configure, and run a larger site myself:
+I started from a Go CRUD web app I'd built about three years earlier and used Claude to grow it into the recommendation engine quickly. What I wanted to learn was how to deploy, configure, and run a larger site myself:
 
 - Containerizing the Go API and React frontend with a Dockerfile and Docker Compose.
 - Running it on a DigitalOcean droplet behind Caddy for TLS and security headers, with Cloudflare DNS in front, alongside my other sites on the same machine.

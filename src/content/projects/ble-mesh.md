@@ -47,7 +47,7 @@ Each MG24 node samples an SHT40 and a VEML7700 in its own FreeRTOS task. The rem
 
 ## What I built
 
-Every layer. It started as a team senior design project, but my teammate dropped the course, so I built the whole system:
+Every layer. It started as a team project, but my teammate dropped the course, so I built the whole system:
 
 - Bare-metal I²C drivers for both sensors using integer-only math, and a mutex-protected sample cache.
 - A custom Bluetooth Mesh vendor model (company `0x02FF`, model `0x1234`) with four opcodes, shared by both nodes.
